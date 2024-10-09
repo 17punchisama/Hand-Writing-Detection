@@ -12,7 +12,7 @@ train_datagen = ImageDataGenerator(
 
 # โหลดข้อมูลจากโฟลเดอร์แยกตามคลาส
 train_generator = train_datagen.flow_from_directory(
-    '/data_for_training',       # Path ไปยังโฟลเดอร์หลักของ dataset
+    'Hand-Writing-Detection\data_for_training',       # Path ไปยังโฟลเดอร์หลักของ dataset
     target_size=(64, 64),     # ปรับขนาดของรูปภาพให้เป็น (64x64)
     color_mode='grayscale',   # ใช้ grayscale ถ้าเป็นข้อมูล handwriting
     batch_size=32,            # ขนาดของ batch ที่จะใช้ในการฝึก
@@ -31,7 +31,7 @@ train_datagen = ImageDataGenerator(
 
 # โหลดข้อมูลจากโฟลเดอร์แยกตามคลาส
 train_generator = train_datagen.flow_from_directory(
-    '/data_for_training',       # Path ไปยังโฟลเดอร์หลักของ dataset
+    'Hand-Writing-Detection\data_for_training',       # Path ไปยังโฟลเดอร์หลักของ dataset
     target_size=(64, 64),     # ปรับขนาดของรูปภาพให้เป็น (64x64)
     color_mode='grayscale',   # ใช้ grayscale ถ้าเป็นข้อมูล handwriting
     batch_size=32,            # ขนาดของ batch ที่จะใช้ในการฝึก
@@ -72,7 +72,7 @@ train_datagen = ImageDataGenerator(rescale=1./255)
 
 # Load your dataset (replace with your dataset directory and setup)
 train_generator = train_datagen.flow_from_directory(
-    '/data_for_training',  # Directory containing training data
+    'Hand-Writing-Detection\data_for_training',  # Directory containing training data
     target_size=(64, 64),  # Resize images if necessary
     color_mode='grayscale',  # Use grayscale mode for handwriting data
     batch_size=32,
