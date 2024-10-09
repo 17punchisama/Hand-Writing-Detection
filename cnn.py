@@ -81,8 +81,8 @@ train_generator = train_datagen.flow_from_directory(
 # Train the model
 history = model.fit(
     train_generator,
-    epochs=10,
-    steps_per_epoch=100)  # Adjust steps per epoch based on dataset size
+    epochs=70,
+    steps_per_epoch=70)  # Adjust steps per epoch based on dataset size
 
 # Save the model
 model.save('handwriting_cnn_model.h5')

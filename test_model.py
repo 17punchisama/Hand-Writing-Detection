@@ -1,31 +1,36 @@
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from tensorflow.keras.models import load_model
 import numpy as np
+from tensorflow.keras.models import load_model
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from tensorflow.keras import models  # นำเข้า models
+from sklearn.metrics.pairwise import cosine_similarity
 
+# โหลดโมเดล
 model = load_model('handwriting_cnn_model.h5')
-# เตรียมชุดข้อมูลทดสอบ
-test_datagen = ImageDataGenerator(rescale=1./255)  # Rescale pixel values to [0, 1]
 
+# สร้าง ImageDataGenerator สำหรับการทดสอบ
+test_datagen = ImageDataGenerator(rescale=1./255)
+
+# สร้าง generator สำหรับภาพทดสอบ
 test_generator = test_datagen.flow_from_directory(
-    r'path',  # Path ไปยังโฟลเดอร์หลักของชุดทดสอบ
-    target_size=(64, 64),     # ขนาดของภาพที่ใช้ (ควรเป็นขนาดเดียวกับตอนฝึก)
-    color_mode='grayscale',   # ใช้ grayscale สำหรับข้อมูลลายมือ
-    batch_size=32,            # ขนาดของ batch
-    class_mode='categorical',  # categorical สำหรับหลายคลาส
-    shuffle=False)            # ไม่สับเปลี่ยนลำดับภาพ
+    'data_for_test',
+    target_size=(64, 64),
+    color_mode='grayscale',
+    batch_size=32,
+    class_mode=None,  # ไม่ต้องการ label ในตอนนี้
+    shuffle=False
+)
 
-# ประเมินโมเดลด้วยชุดทดสอบ
-test_loss, test_acc = model.evaluate(test_generator, steps=len(test_generator))
-print(f'Test accuracy: {test_acc}')
+# ดึงฟีเจอร์จากโมเดล
+feature_extractor = models.Model(inputs=model.inputs, outputs=model.layers[-2].output)  # ดึงออกมาจาก layer ก่อนสุดท้าย
+features = feature_extractor.predict(test_generator)
 
-# ทำการทำนายผลลัพธ์จากชุดทดสอบ
-predictions = model.predict(test_generator)
-predicted_classes = np.argmax(predictions, axis=1)  # แปลงค่าความน่าจะเป็นเป็นคลาสที่มีค่าสูงสุด
+# คำนวณ Cosine Similarity
+similarity_matrix = cosine_similarity(features)
 
-# เปรียบเทียบผลลัพธ์ที่ทำนายกับผลลัพธ์จริง
-true_classes = test_generator.classes
-class_labels = list(test_generator.class_indices.keys())
+# แสดงผล Cosine Similarity
+print("Cosine Similarity Matrix:")
+print(similarity_matrix)
 
-# แสดงผลลัพธ์ที่ทำนายและผลลัพธ์จริง
-for i in range(len(predicted_classes)):
-    print(f'Predicted: {class_labels[predicted_classes[i]]}, True: {class_labels[true_classes[i]]}')
+# ตัวอย่างการแสดงความคล้ายคลึงกันระหว่างภาพที่ 1 และ 2
+similarity_between_1_and_2 = similarity_matrix[0][1]
+print(f"Cosine Similarity between Image 1 and Image 2: {similarity_between_1_and_2}")
