@@ -1,6 +1,6 @@
 import os
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
-from matplotlib.pyplot import imread, imshow, subplots, show
+from matplotlib.pyplot import imread, imshow, subplots, show, imsave
 import glob
 
 def read_img(img_path):
@@ -12,7 +12,7 @@ def plot_and_save(images, data_generator, output_path, transformation_name, num_
     augmented_images = data_generator.flow(images, batch_size=1)
 
     for i in range(num_augmented):
-        img = augmented_images.next()[0].astype('uint8')  # Get the next augmented image
+        img = augmented_images.__next__()[0].astype('uint8')  # Get the next augmented image
         augmented_filename = f"{os.path.splitext(os.path.basename(output_path))[0]}_{transformation_name}_{i}.jpg"
         augmented_full_path = os.path.join(os.path.dirname(output_path), augmented_filename)
         imsave(augmented_full_path, img)
@@ -28,13 +28,10 @@ def apply_augmentation(img_path):
     rotation_generator = ImageDataGenerator(rotation_range=20)
     plot_and_save(images, rotation_generator, output_path, "rotation")
 
-    width_shifting_generator = ImageDataGenerator(width_shift_range=0.3)
-    plot_and_save(images, width_shifting_generator, output_path, "width_shifting")
+    shear_generator = ImageDataGenerator(shear_range=0.2)  # Adjust shear_range as needed
+    plot_and_save(images, shear_generator, output_path, "shear")
 
-    height_shifting_generator = ImageDataGenerator(height_shift_range=0.3)
-    plot_and_save(images, height_shifting_generator, output_path, "height_shifting")
-
-    zoom_generator = ImageDataGenerator(zoom_range=[0.5, 1.5])
+    zoom_generator = ImageDataGenerator(zoom_range=[0.5, 0.9])
     plot_and_save(images, zoom_generator, output_path, "zoom")
 
 # Process all images in the directory
@@ -48,5 +45,5 @@ def process_all_images_in_folder(folder_path):
 
 # Example usage
 if __name__ == "__main__":
-    base_folder = 'C:/Linear_project/data_for_training'
+    base_folder = 'data_for_training'
     process_all_images_in_folder(base_folder)
