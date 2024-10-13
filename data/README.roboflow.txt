@@ -1,8 +1,8 @@
 
-Linear Thai Handwriting - v6 2024-10-08 1:12pm
+Linear Thai Handwriting - v7 2024-10-13 7:22am
 ==============================
 
-This dataset was exported via roboflow.com on October 8, 2024 at 1:13 PM GMT
+This dataset was exported via roboflow.com on October 13, 2024 at 7:23 AM GMT
 
 Roboflow is an end-to-end computer vision platform that helps you
 * collaborate with your team on computer vision projects
@@ -17,16 +17,14 @@ visit https://github.com/roboflow/notebooks
 
 To find over 100k other datasets and pre-trained models, visit https://universe.roboflow.com
 
-The dataset includes 471 images.
+The dataset includes 197 images.
 Handwriting-detection are annotated in Tensorflow Object Detection format.
 
 The following pre-processing was applied to each image:
 * Auto-orientation of pixel data (with EXIF-orientation stripping)
+* Resize to 1080x1080 (Stretch)
 * Grayscale (CRT phosphor)
 
-The following augmentation was applied to create 3 versions of each source image:
-* Random rotation of between -15 and +15 degrees
-* Random shear of between -10° to +10° horizontally and -10° to +10° vertically
-* Random brigthness adjustment of between -25 and +25 percent
+No image augmentation techniques were applied.
 
 
