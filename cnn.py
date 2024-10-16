@@ -1,92 +1,104 @@
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
 import tensorflow as tf
 from tensorflow.keras import layers, models
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+import matplotlib.pyplot as plt
 
-num_classes = 69
-# Data augmentation (ถ้าต้องการทำเพิ่ม)
-train_datagen = ImageDataGenerator(
-    rescale=1./255,           # Rescale pixel values to [0, 1]
-    shear_range=0.2,          # Random shear
-    zoom_range=0.2,           # Random zoom
-    horizontal_flip=True)     # Randomly flip images horizontally
+# กำหนดพารามิเตอร์เบื้องต้น
+image_size = 128
+batch_size = 64
+num_classes = 69  # จำนวน class เป็น 69 class
+epochs = 50
 
-# โหลดข้อมูลจากโฟลเดอร์แยกตามคลาส
-train_generator = train_datagen.flow_from_directory(
-    'data_for_training',       # Path ไปยังโฟลเดอร์หลักของ dataset
-    target_size=(64, 64),     # ปรับขนาดของรูปภาพให้เป็น (64x64)
-    color_mode='grayscale',   # ใช้ grayscale ถ้าเป็นข้อมูล handwriting
-    batch_size=32,            # ขนาดของ batch ที่จะใช้ในการฝึก
-    class_mode='categorical') # ใช้ 'categorical' สำหรับการแบ่งคลาสหลาย ๆ คลาส
+# 1. เตรียมข้อมูล (ไม่ทำ data augmentation)
+datagen = ImageDataGenerator(rescale=1./255,)  # แค่ normalizing ข้อมูลให้อยู่ในช่วง [0, 1]
 
+# Train generator
+train_generator = datagen.flow_from_directory(
+    'C:/Users/User/Documents/KMITL/forCoding/Hand_Writing_Detection/data_for_training',  # เปลี่ยนเป็น path ของโฟลเดอร์ข้อมูลการเทรน
+    target_size=(image_size, image_size),
+    batch_size=batch_size,
+    class_mode='categorical'  # ใช้ categorical ถ้า label เป็น one-hot encoded
+)       
 
-# ตรวจสอบคลาสที่ ImageDataGenerator สร้างขึ้น
-print(train_generator.class_indices)
+# Validation generator
+validation_generator = datagen.flow_from_directory(
+    'C:/Users/User/Documents/KMITL/forCoding/Hand_Writing_Detection/data_for_valid',  # เปลี่ยนเป็น path ของโฟลเดอร์ข้อมูล validation
+    target_size=(image_size, image_size), 
+    batch_size=batch_size,
+    class_mode='categorical'
+)
 
-# Data augmentation (ถ้าต้องการทำเพิ่ม)
-train_datagen = ImageDataGenerator(
-    rescale=1./255,           # Rescale pixel values to [0, 1]
-    shear_range=0.2,          # Random shear
-    zoom_range=0.2,           # Random zoom
-    horizontal_flip=True)     # Randomly flip images horizontally
-
-# โหลดข้อมูลจากโฟลเดอร์แยกตามคลาส
-train_generator = train_datagen.flow_from_directory(
-    'data_for_training',       # Path ไปยังโฟลเดอร์หลักของ dataset
-    target_size=(64, 64),     # ปรับขนาดของรูปภาพให้เป็น (64x64)
-    color_mode='grayscale',   # ใช้ grayscale ถ้าเป็นข้อมูล handwriting
-    batch_size=32,            # ขนาดของ batch ที่จะใช้ในการฝึก
-    class_mode='categorical') # ใช้ 'categorical' สำหรับการแบ่งคลาสหลาย ๆ คลาส
-
-
-# Initialize the model
+# 2. สร้างโมเดล CNN
 model = models.Sequential()
 
-# First Convolutional layer
-model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=(64, 64, 1)))  # For grayscale, (64, 64, 1) as input shape
-model.add(layers.MaxPooling2D((2, 2)))
+# Layer 1: Convolutional Layer
+model.add(layers.Conv2D(32, (3, 3), activation='relu', input_shape=(image_size, image_size, 3)))
 
-# Second Convolutional layer
+# Layer 2: MaxPooling Layer
+model.add(layers.MaxPooling2D((2, 2)))
+model.add(layers.Dropout(0.2))
+
+# Layer 3: Convolutional Layer
 model.add(layers.Conv2D(64, (3, 3), activation='relu'))
-model.add(layers.MaxPooling2D((2, 2)))
 
-# Third Convolutional layer
+# Layer 4: MaxPooling Layer
+model.add(layers.MaxPooling2D((2, 2)))
+model.add(layers.Dropout(0.2))
+
+# Layer 5: Convolutional Layer
 model.add(layers.Conv2D(128, (3, 3), activation='relu'))
+
+# Layer 6: MaxPooling Layer
 model.add(layers.MaxPooling2D((2, 2)))
+model.add(layers.Dropout(0.2))
 
-# Flatten the output
+# Layer 7: Fully connected layer (Flatten + Dense)
 model.add(layers.Flatten())
+model.add(layers.Dense(128, activation='relu'))  # Fully connected layer
+model.add(layers.Dropout(0.3))
+model.add(layers.Dense(num_classes, activation='softmax'))  # Output layer with softmax for 69 class classification
 
-# Fully connected layer
-model.add(layers.Dense(128, activation='relu'))
+# แสดงสรุปโมเดล
+print(model.summary())
 
-# Output layer (for multi-class classification, use softmax)
-model.add(layers.Dense(num_classes, activation='softmax'))  # num_classes is the number of classes in your dataset
-
-# Compile the model
+# 3. Compile โมเดล
 model.compile(optimizer='adam',
-              loss='categorical_crossentropy',  # For multi-class classification
+              loss='categorical_crossentropy',  # ใช้ categorical_crossentropy เมื่อ label เป็น one-hot encoded
               metrics=['accuracy'])
 
-# Data augmentation (optional, if not already pre-processed)
-train_datagen = ImageDataGenerator(rescale=1./255)
-
-# Load your dataset (replace with your dataset directory and setup)
-train_generator = train_datagen.flow_from_directory(
-    'data_for_training',  # Directory containing training data
-    target_size=(64, 64),  # Resize images if necessary
-    color_mode='grayscale',  # Use grayscale mode for handwriting data
-    batch_size=32,
-    class_mode='categorical')  # Adjust based on label format (categorical for multi-class)
-
-# Train the model
+# 4. Train โมเดล
 history = model.fit(
     train_generator,
-    epochs=70,
-    steps_per_epoch=70)  # Adjust steps per epoch based on dataset size
+    steps_per_epoch=train_generator.samples // batch_size, 
+    epochs=epochs,
+    validation_data=validation_generator,
+    validation_steps=validation_generator.samples // batch_size
+)
 
-# Save the model
-model.save('handwriting_cnn_model.h5')
+# Plot training & validation accuracy values
+plt.figure(figsize=(10, 5))
+plt.plot(history.history['accuracy'], label='Train Accuracy')
+plt.plot(history.history['val_accuracy'], label='Validation Accuracy')
+plt.title('Model Accuracy')
+plt.ylabel('Accuracy')
+plt.xlabel('Epoch')
+plt.legend(loc='upper left')
+plt.grid(True)
+plt.show()
 
-# ตรวจสอบคลาสที่ ImageDataGenerator สร้างขึ้น
-print(train_generator.class_indices)
+plt.figure(figsize=(10, 5))
+plt.plot(history.history['loss'], label='Train Loss')
+plt.plot(history.history['val_loss'], label='Validation Loss')
+plt.title('Model Loss')
+plt.ylabel('Loss')
+plt.xlabel('Epoch')
+plt.legend(loc='upper left')
+plt.grid(True)
+plt.show()
 
+# 5. Evaluate โมเดล
+loss, accuracy = model.evaluate(validation_generator)
+print(f'Validation Loss: {loss}, Validation Accuracy: {accuracy}')
+
+# 6. Save โมเดล (ถ้าต้องการ)
+model.save('model_final_final_ver3.h5')  # บันทึกโมเดลที่เทรนแล้ว

@@ -2,13 +2,13 @@ import os
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from matplotlib.pyplot import imread, imshow, subplots, show, imsave
 import glob
-
+     
 def read_img(img_path):
     image = imread(img_path)
     images = image.reshape((1, image.shape[0], image.shape[1], image.shape[2]))
     return images
 
-def plot_and_save(images, data_generator, output_path, transformation_name, num_augmented=5):
+def plot_and_save(images, data_generator, output_path, transformation_name, num_augmented=2):
     augmented_images = data_generator.flow(images, batch_size=1)
 
     for i in range(num_augmented):
@@ -28,10 +28,10 @@ def apply_augmentation(img_path):
     rotation_generator = ImageDataGenerator(rotation_range=20)
     plot_and_save(images, rotation_generator, output_path, "rotation")
 
-    shear_generator = ImageDataGenerator(shear_range=0.2)  # Adjust shear_range as needed
+    shear_generator = ImageDataGenerator(shear_range=0.3)  # Adjust shear_range as needed
     plot_and_save(images, shear_generator, output_path, "shear")
 
-    zoom_generator = ImageDataGenerator(zoom_range=[0.5, 0.9])
+    zoom_generator = ImageDataGenerator(zoom_range=[1.0, 1.5])
     plot_and_save(images, zoom_generator, output_path, "zoom")
 
 # Process all images in the directory
@@ -45,5 +45,5 @@ def process_all_images_in_folder(folder_path):
 
 # Example usage
 if __name__ == "__main__":
-    base_folder = 'data_for_training'
+    base_folder = 'data_for_valid'
     process_all_images_in_folder(base_folder)
