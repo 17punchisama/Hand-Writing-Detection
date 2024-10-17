@@ -7,24 +7,24 @@ from tensorflow.keras.models import load_model
 from sklearn.metrics.pairwise import cosine_similarity
   
 # Load the saved model
-model = load_model(r"C:\Users\Admin\Desktop\2nd\Linear\Hand-Writing-Detection\thai_hand_writing_detection_ver3.h5")
+model = load_model(r"C:\Users\User\Documents\KMITL\Linear\Hand-Writing-Detection\model_final_final_ver3.h5")
 
 # Dictionary for actual class names and image paths
 actual_classname = {
-    "alphabet\\c0.png": "ก", "alphabet\\c1.png": "ข", "alphabet\\c2.png": "ฃ", "alphabet\\c3.png": "ค", "alphabet\\c4.png": "ฅ",
-    "alphabet\\c5.png": "ฆ", "alphabet\\c6.png": "ง", "alphabet\\c7.png": "จ", "alphabet\\c8.png": "ฉ", "alphabet\\c9.png": "ช",
-    "alphabet\\c10.png": "ซ", "alphabet\\c11.png": "ฌ", "alphabet\\c12.png": "ญ", "alphabet\\c13.png": "ฎ", "alphabet\\c14.png": "ฏ",
-    "alphabet\\c15.png": "ฐ", "alphabet\\c16.png": "ฑ", "alphabet\\c17.png": "ฒ", "alphabet\\c18.png": "ณ", "alphabet\\c19.png": "ด",
-    "alphabet\\c20.png": "ต", "alphabet\\c21.png": "ถ", "alphabet\\c22.png": "ท", "alphabet\\c23.png": "ธ", "alphabet\\c24.png": "น",
-    "alphabet\\c25.png": "บ", "alphabet\\c26.png": "ป", "alphabet\\c27.png": "ผ", "alphabet\\c28.png": "ฝ", "alphabet\\c29.png": "พ",
-    "alphabet\\c30.png": "ฟ", "alphabet\\c31.png": "ภ", "alphabet\\c32.png": "ม", "alphabet\\c33.png": "ย", "alphabet\\c34.png": "ร",
-    "alphabet\\c35.png": "ล", "alphabet\\c36.png": "ว", "alphabet\\c37.png": "ศ", "alphabet\\c38.png": "ษ", "alphabet\\c39.png": "ส",
-    "alphabet\\c40.png": "ห", "alphabet\\c41.png": "ฬ", "alphabet\\c42.png": "อ", "alphabet\\c43.png": "ฮ",
-    "alphabet\\t0.png": "อ่", "alphabet\\t1.png": "อ้", "alphabet\\t2.png": "อ๊", "alphabet\\t3.png": "อ๋", "alphabet\\t4.png": "อ็",
-    "alphabet\\v0.png": "ะ", "alphabet\\v1.png": "า", "alphabet\\v2.png": "อั", "alphabet\\v3.png": "อิ", "alphabet\\v4.png": "อี",
-    "alphabet\\v5.png": "อึ", "alphabet\\v6.png": "อื", "alphabet\\v7.png": "อุ", "alphabet\\v8.png": "อู", "alphabet\\v9.png": "เ",
-    "alphabet\\v10.png": "แ", "alphabet\\v11.png": "โ", "alphabet\\v12.png": "อำ", "alphabet\\v13.png": "ใ", "alphabet\\v14.png": "ไ",
-    "alphabet\\v15.png": "ๆ", "alphabet\\v16.png": "อ์", "alphabet\\v17.png": "ฯ", "alphabet\\v18.png": "ฤ", "alphabet\\v19.png": "ฦ"
+    "Hand-Writing-Detection\\alphabet\\c0.png": "ก", "Hand-Writing-Detection\\alphabet\\c1.png": "ข", "Hand-Writing-Detection\\alphabet\\c2.png": "ฃ", "Hand-Writing-Detection\\alphabet\\c3.png": "ค", "Hand-Writing-Detection\\alphabet\\c4.png": "ฅ",
+    "Hand-Writing-Detection\\alphabet\\c5.png": "ฆ", "Hand-Writing-Detection\\alphabet\\c6.png": "ง", "Hand-Writing-Detection\\alphabet\\c7.png": "จ", "Hand-Writing-Detection\\alphabet\\c8.png": "ฉ", "Hand-Writing-Detection\\alphabet\\c9.png": "ช",
+    "Hand-Writing-Detection\\alphabet\\c10.png": "ซ", "Hand-Writing-Detection\\alphabet\\c11.png": "ฌ", "Hand-Writing-Detection\\alphabet\\c12.png": "ญ", "Hand-Writing-Detection\\alphabet\\c13.png": "ฎ", "Hand-Writing-Detection\\alphabet\\c14.png": "ฏ",
+    "Hand-Writing-Detection\\alphabet\\c15.png": "ฐ", "Hand-Writing-Detection\\alphabet\\c16.png": "ฑ", "Hand-Writing-Detection\\alphabet\\c17.png": "ฒ", "Hand-Writing-Detection\\alphabet\\c18.png": "ณ", "Hand-Writing-Detection\\alphabet\\c19.png": "ด",
+    "Hand-Writing-Detection\\alphabet\\c20.png": "ต", "Hand-Writing-Detection\\alphabet\\c21.png": "ถ", "Hand-Writing-Detection\\alphabet\\c22.png": "ท", "Hand-Writing-Detection\\alphabet\\c23.png": "ธ", "Hand-Writing-Detection\\alphabet\\c24.png": "น",
+    "Hand-Writing-Detection\\alphabet\\c25.png": "บ", "Hand-Writing-Detection\\alphabet\\c26.png": "ป", "Hand-Writing-Detection\\alphabet\\c27.png": "ผ", "Hand-Writing-Detection\\alphabet\\c28.png": "ฝ", "Hand-Writing-Detection\\alphabet\\c29.png": "พ",
+    "Hand-Writing-Detection\\alphabet\\c30.png": "ฟ", "Hand-Writing-Detection\\alphabet\\c31.png": "ภ", "Hand-Writing-Detection\\alphabet\\c32.png": "ม", "Hand-Writing-Detection\\alphabet\\c33.png": "ย", "Hand-Writing-Detection\\alphabet\\c34.png": "ร",
+    "Hand-Writing-Detection\\alphabet\\c35.png": "ล", "Hand-Writing-Detection\\alphabet\\c36.png": "ว", "Hand-Writing-Detection\\alphabet\\c37.png": "ศ", "Hand-Writing-Detection\\alphabet\\c38.png": "ษ", "Hand-Writing-Detection\\alphabet\\c39.png": "ส",
+    "Hand-Writing-Detection\\alphabet\\c40.png": "ห", "Hand-Writing-Detection\\alphabet\\c41.png": "ฬ", "Hand-Writing-Detection\\alphabet\\c42.png": "อ", "Hand-Writing-Detection\\alphabet\\c43.png": "ฮ",
+    "Hand-Writing-Detection\\alphabet\\t0.png": "อ่", "Hand-Writing-Detection\\alphabet\\t1.png": "อ้", "Hand-Writing-Detection\\alphabet\\t2.png": "อ๊", "Hand-Writing-Detection\\alphabet\\t3.png": "อ๋", "Hand-Writing-Detection\\alphabet\\t4.png": "อ็",
+    "Hand-Writing-Detection\\alphabet\\v0.png": "ะ", "Hand-Writing-Detection\\alphabet\\v1.png": "า", "Hand-Writing-Detection\\alphabet\\v2.png": "อั", "Hand-Writing-Detection\\alphabet\\v3.png": "อิ", "Hand-Writing-Detection\\alphabet\\v4.png": "อี",
+    "Hand-Writing-Detection\\alphabet\\v5.png": "อึ", "Hand-Writing-Detection\\alphabet\\v6.png": "อื", "Hand-Writing-Detection\\alphabet\\v7.png": "อุ", "Hand-Writing-Detection\\alphabet\\v8.png": "อู", "Hand-Writing-Detection\\alphabet\\v9.png": "เ",
+    "Hand-Writing-Detection\\alphabet\\v10.png": "แ", "Hand-Writing-Detection\\alphabet\\v11.png": "โ", "Hand-Writing-Detection\\alphabet\\v12.png": "อำ", "Hand-Writing-Detection\\alphabet\\v13.png": "ใ", "Hand-Writing-Detection\\alphabet\\v14.png": "ไ",
+    "Hand-Writing-Detection\\alphabet\\v15.png": "ๆ", "Hand-Writing-Detection\\alphabet\\v16.png": "อ์", "Hand-Writing-Detection\\alphabet\\v17.png": "ฯ", "Hand-Writing-Detection\\alphabet\\v18.png": "ฤ", "Hand-Writing-Detection\\alphabet\\v19.png": "ฦ"
 }
 
 # Create the main window

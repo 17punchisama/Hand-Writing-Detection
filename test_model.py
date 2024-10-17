@@ -5,7 +5,7 @@ from tensorflow.keras import models  # นำเข้า models
 from sklearn.metrics.pairwise import cosine_similarity
 
 # โหลดโมเดล
-model = load_model('handwriting_cnn_model.h5')
+model = load_model(r'C:\Users\User\Documents\KMITL\Linear\Hand-Writing-Detection\model_final_final_ver3.h5')
 
 # สร้าง ImageDataGenerator สำหรับการทดสอบ
 test_datagen = ImageDataGenerator(rescale=1./255)
